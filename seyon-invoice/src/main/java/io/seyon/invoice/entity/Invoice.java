@@ -37,6 +37,9 @@ public class Invoice implements Serializable {
 
 	@Column
 	private String sacCode;
+	
+	@Column
+	private String invoiceType;
 
 	@Column
 	private Date invoiceDate;

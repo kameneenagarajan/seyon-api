@@ -30,6 +30,15 @@ public class ClientEntity implements Serializable {
 	@Column(nullable=false)
 	String name;
 	
+	@Size(min = 3, message = "Please enter the Contact Person name")
+	@Column(nullable=true)
+	String contactPerson;
+	
+
+	@Size(min = 3, message = "Please enter the Company Type")
+	@Column(nullable=true)
+	String companyType;
+	
 	@NonNull
 	@Size(min = 3, message = "Please enter the Address")
 	@Column(nullable=false)
@@ -346,17 +355,24 @@ public class ClientEntity implements Serializable {
 	public void setActive(String active) {
 		this.active = active;
 	}
-	@Override
-	public String toString() {
-		return "ClientEntity [id=" + id + ", name=" + name + ", addrLine1=" + addrLine1 + ", addrLine2=" + addrLine2
-				+ ", city=" + city + ", state=" + state + ", pinCode=" + pincode + ", phonePrimary=" + phonePrimary
-				+ ", phoneSecondary=" + phoneSecondary + ", faxNo=" + faxNo + ", pan=" + pan + ", gstin=" + gstin
-				+ ", ServiceTaxRegNo=" + ServiceTaxRegNo + ", accountingType=" + accountingType + ", email=" + email
-				+ ", bankName=" + bankName + ", bankAcctNumber=" + bankAcctNumber + ", ifscCode=" + ifscCode
-				+ ", bankBranch=" + bankBranch + ", accountType=" + accountType + ", swiftCode=" + swiftCode
-				+ ", companyId=" + companyId + ", active=" + active + ", createDate=" + createDate + ", createdBy="
-				+ createdBy + "]";
+	
+	
+	public String getContactPerson() {
+		return contactPerson;
 	}
+
+	public void setContactPerson(String contactPerson) {
+		this.contactPerson = contactPerson;
+	}
+
+	public String getCompanyType() {
+		return companyType;
+	}
+
+	public void setCompanyType(String companyType) {
+		this.companyType = companyType;
+	}
+
 
 	public Date getCreateDate() {
 		return createDate;
@@ -373,5 +389,20 @@ public class ClientEntity implements Serializable {
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
+
+	@Override
+	public String toString() {
+		return "ClientEntity [id=" + id + ", name=" + name + ", contactPerson=" + contactPerson + ", companyType="
+				+ companyType + ", addrLine1=" + addrLine1 + ", addrLine2=" + addrLine2 + ", city=" + city + ", state="
+				+ state + ", pincode=" + pincode + ", phonePrimary=" + phonePrimary + ", phoneSecondary="
+				+ phoneSecondary + ", faxNo=" + faxNo + ", pan=" + pan + ", gstin=" + gstin + ", ServiceTaxRegNo="
+				+ ServiceTaxRegNo + ", accountingType=" + accountingType + ", logoImg=" + logoImg + ", signatureImg="
+				+ signatureImg + ", email=" + email + ", bankName=" + bankName + ", bankAcctNumber=" + bankAcctNumber
+				+ ", ifscCode=" + ifscCode + ", bankBranch=" + bankBranch + ", accountType=" + accountType
+				+ ", swiftCode=" + swiftCode + ", companyId=" + companyId + ", active=" + active + ", createDate="
+				+ createDate + ", createdBy=" + createdBy + "]";
+	}
+	
+	
 
 }
