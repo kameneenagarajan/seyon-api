@@ -8,24 +8,19 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.Size;
-
-import org.springframework.lang.NonNull;
 
 @Entity
 @Table(name="client_entity")
 public class ClientEntity implements Serializable {
 
-	private static final long serialVersionUID = 2658424664266410103L;
+	private static final long serialVersionUID = 2658466410103L;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	Long id;
 	
-	@NonNull
 	@Size(min = 3, message = "Please enter the Client name")
 	@Column(nullable=false)
 	String name;
@@ -34,12 +29,14 @@ public class ClientEntity implements Serializable {
 	@Column(nullable=true)
 	String contactPerson;
 	
+	@Column(nullable=true)
+	String email;
+	
 
 	@Size(min = 3, message = "Please enter the Company Type")
 	@Column(nullable=true)
 	String companyType;
 	
-	@NonNull
 	@Size(min = 3, message = "Please enter the Address")
 	@Column(nullable=false)
 	String addrLine1;
@@ -47,110 +44,67 @@ public class ClientEntity implements Serializable {
 	@Column
 	String addrLine2;
 	
-	@NonNull
 	@Size(min = 3, message = "Please enter the City")
 	@Column(nullable=false)
 	String city;
 	
-	@NonNull
 	@Size(min = 2, message = "Please enter the State")
 	@Column(nullable=false)
 	String state;
 	
-	@NonNull
 	@Size(min = 6, max = 6, message = "Please enter the Pincode")
 	@Column(name="pin_code", nullable=false)
 	String pincode;
 
-	@NonNull
 	@Size(min = 10, max = 12, message = "Please enter the Primary phone")
 	@Column(nullable=false)
 	String phonePrimary;
 
-	@Column
+	@Column(nullable=true)
 	String phoneSecondary;
 	
-	@Column
+	@Column(nullable=true)
 	String faxNo;
 
-	@NonNull
 	@Size(min = 10, message = "Please enter the PAN")
 	@Column(nullable=false)
 	String pan;
 	
-	@NonNull
 	@Size(min = 15,max=20, message = "Please enter the GSTIN")
 	@Column(nullable=false)
 	String gstin;
 	
-	@Size(min=15,max=20,message="Please enter the Primary phone" )
-	@Column
+	@Column(nullable=true)
 	String ServiceTaxRegNo;
 	
-
-	@Size(min=3,message="Please enter the Primary phone" )
-	@Column
-	String accountingType;
-	
-
-	@Lob
-	@Column(nullable=true)
-	String logoImg;
-	
-	@Lob
-	@Column
-	String signatureImg;
-	
-	@NonNull
-	@Email(message="Please enter the valid email id")
-	@Column
-	String email;
-	
-	@NonNull
-	@Size(min=3,message="Please enter the Bank Name")
-	@Column(nullable=true)
-	String bankName;
-	
-	@NonNull
-	@Size(min=5,max=20,message="Please enter the Bank Account Number")
-	@Column(nullable=true)
-	String bankAcctNumber;
-	
-	@NonNull
-	@Size(min=9,max=15,message="Please enter the IFSC CODE")
-	@Column(nullable=true)
-	String ifscCode;
-	
-	@NonNull
-	@Size(min=3,max=15,message="Please enter the Bank Branch")
-	@Column
-	String bankBranch;
-	
-	
-	@Size(min=3,max=15,message="Please enter the Bank Account Type")
-	@Column
-	String accountType;
-	
-
-	@Size(min=3,max=15,message="Please enter the Shift Code")
-	@Column
-	String swiftCode;
-	
-	@NonNull
 	@Column(nullable=false)
 	Long companyId;
 
-	@NonNull
 	@Column(nullable=false)
 	String active="Y";
 	
-	@NonNull
-	@Column
+	@Column(nullable=true)
 	Date createDate= new Date();;
 	
-	@NonNull
-	@Column
+	@Column(nullable=true)
 	String createdBy;
+	
+	@Column(nullable=true)
+	String shipToAddrLine1;
+	
+	@Column(nullable=true)
+	String shipToAddrLine2;
+	
+	@Column(nullable=true)
+	String shipToAddrCity;
+	
+	@Column(nullable=true)
+	String shipToAddrState;
+	
+	@Column(nullable=true)
+	String shipToAddrPincode;
+	
+	
 	
 	public Long getId() {
 		return id;
@@ -258,85 +212,6 @@ public class ClientEntity implements Serializable {
 		ServiceTaxRegNo = serviceTaxRegNo;
 	}
 
-	public String getAccountingType() {
-		return accountingType;
-	}
-
-	public void setAccountingType(String accountingType) {
-		this.accountingType = accountingType;
-	}
-
-	public String getLogoImg() {
-		return logoImg;
-	}
-
-	public void setLogoImg(String logoImg) {
-		this.logoImg = logoImg;
-	}
-
-	public String getSignatureImg() {
-		return signatureImg;
-	}
-
-	public void setSignatureImg(String signatureImg) {
-		this.signatureImg = signatureImg;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getBankName() {
-		return bankName;
-	}
-
-	public void setBankName(String bankName) {
-		this.bankName = bankName;
-	}
-
-	public String getBankAcctNumber() {
-		return bankAcctNumber;
-	}
-
-	public void setBankAcctNumber(String bankAcctNumber) {
-		this.bankAcctNumber = bankAcctNumber;
-	}
-
-	public String getIfscCode() {
-		return ifscCode;
-	}
-
-	public void setIfscCode(String ifscCode) {
-		this.ifscCode = ifscCode;
-	}
-
-	public String getBankBranch() {
-		return bankBranch;
-	}
-
-	public void setBankBranch(String bankBranch) {
-		this.bankBranch = bankBranch;
-	}
-
-	public String getAccountType() {
-		return accountType;
-	}
-
-	public void setAccountType(String accountType) {
-		this.accountType = accountType;
-	}
-
-	public String getSwiftCode() {
-		return swiftCode;
-	}
-
-	public void setSwiftCode(String swiftCode) {
-		this.swiftCode = swiftCode;
-	}
 
 	public Long getCompanyId() {
 		return companyId;
@@ -345,7 +220,6 @@ public class ClientEntity implements Serializable {
 	public void setCompanyId(Long companyId) {
 		this.companyId = companyId;
 	}
-
 
 
 	public String getActive() {
@@ -390,18 +264,69 @@ public class ClientEntity implements Serializable {
 		this.createdBy = createdBy;
 	}
 
+	public String getShipToAddrLine1() {
+		return shipToAddrLine1;
+	}
+
+	public void setShipToAddrLine1(String shipToAddrLine1) {
+		this.shipToAddrLine1 = shipToAddrLine1;
+	}
+
+	public String getShipToAddrLine2() {
+		return shipToAddrLine2;
+	}
+
+	public void setShipToAddrLine2(String shipToAddrLine2) {
+		this.shipToAddrLine2 = shipToAddrLine2;
+	}
+
+	public String getShipToAddrCity() {
+		return shipToAddrCity;
+	}
+
+	public void setShipToAddrCity(String shipToAddrCity) {
+		this.shipToAddrCity = shipToAddrCity;
+	}
+
+	public String getShipToAddrState() {
+		return shipToAddrState;
+	}
+
+	public void setShipToAddrState(String shipToAddrState) {
+		this.shipToAddrState = shipToAddrState;
+	}
+
+	public String getShipToAddrPincode() {
+		return shipToAddrPincode;
+	}
+
+	public void setShipToAddrPincode(String shipToAddrPincode) {
+		this.shipToAddrPincode = shipToAddrPincode;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
 	@Override
 	public String toString() {
-		return "ClientEntity [id=" + id + ", name=" + name + ", contactPerson=" + contactPerson + ", companyType="
-				+ companyType + ", addrLine1=" + addrLine1 + ", addrLine2=" + addrLine2 + ", city=" + city + ", state="
-				+ state + ", pincode=" + pincode + ", phonePrimary=" + phonePrimary + ", phoneSecondary="
-				+ phoneSecondary + ", faxNo=" + faxNo + ", pan=" + pan + ", gstin=" + gstin + ", ServiceTaxRegNo="
-				+ ServiceTaxRegNo + ", accountingType=" + accountingType + ", logoImg=" + logoImg + ", signatureImg="
-				+ signatureImg + ", email=" + email + ", bankName=" + bankName + ", bankAcctNumber=" + bankAcctNumber
-				+ ", ifscCode=" + ifscCode + ", bankBranch=" + bankBranch + ", accountType=" + accountType
-				+ ", swiftCode=" + swiftCode + ", companyId=" + companyId + ", active=" + active + ", createDate="
-				+ createDate + ", createdBy=" + createdBy + "]";
+		return "ClientEntity [id=" + id + ", name=" + name + ", contactPerson=" + contactPerson + ", email=" + email
+				+ ", companyType=" + companyType + ", addrLine1=" + addrLine1 + ", addrLine2=" + addrLine2 + ", city="
+				+ city + ", state=" + state + ", pincode=" + pincode + ", phonePrimary=" + phonePrimary
+				+ ", phoneSecondary=" + phoneSecondary + ", faxNo=" + faxNo + ", pan=" + pan + ", gstin=" + gstin
+				+ ", ServiceTaxRegNo=" + ServiceTaxRegNo + ", companyId=" + companyId + ", active=" + active
+				+ ", createDate=" + createDate + ", createdBy=" + createdBy + ", shipToAddrLine1=" + shipToAddrLine1
+				+ ", shipToAddrLine2=" + shipToAddrLine2 + ", shipToAddrCity=" + shipToAddrCity + ", shipToAddrState="
+				+ shipToAddrState + ", shipToAddrPincode=" + shipToAddrPincode + "]";
 	}
+
+
+
+	
 	
 	
 

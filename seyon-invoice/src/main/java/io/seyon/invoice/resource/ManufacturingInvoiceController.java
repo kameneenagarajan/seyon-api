@@ -1,5 +1,6 @@
 package io.seyon.invoice.resource;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
@@ -14,69 +15,62 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import io.seyon.invoice.entity.Invoice;
+import io.seyon.invoice.entity.ManufacturingInvoice;
 import io.seyon.invoice.entity.SACCode;
 import io.seyon.invoice.model.InvoiceData;
 import io.seyon.invoice.model.InvoiceSearch;
 import io.seyon.invoice.repository.SACCodeRepository;
+import io.seyon.invoice.service.GenerateManuInvoiceService;
 import io.seyon.invoice.service.InvoiceService;
+import io.seyon.invoice.service.ManufacturingInvoiceService;
 
 @RestController
-@RequestMapping("/api/invoice")
-public class InvoiceController {
+@RequestMapping("/api/manuFacturingInvoice")
+public class ManufacturingInvoiceController {
 
 	@Autowired
-	private InvoiceService invoiceService;
+	private ManufacturingInvoiceService invoiceService;
+	
+
+	@Autowired
+	private GenerateManuInvoiceService generateManuInvoiceService;
 	
 	@Autowired
 	private SACCodeRepository sacRepo;
 
-	private static final Logger log = LoggerFactory.getLogger(InvoiceController.class);
+	private static final Logger log = LoggerFactory.getLogger(ManufacturingInvoiceController.class);
 
 	@PostMapping(path="/performa",produces = MediaType.APPLICATION_JSON_VALUE)
-	public InvoiceData savePerformaInvoice(@RequestBody InvoiceData invoiceData,
+	public List<ManufacturingInvoice> savePerformaInvoice(@RequestBody List<ManufacturingInvoice> invoiceData,
 			@RequestHeader(name = "x-company-id", required = true) Long companyId,
 			@RequestHeader(name = "x-user-name", required = true) String userId) {
 		log.info("Invoice details request {}", invoiceData);
-
-		invoiceData.getInvoice().setCompanyId(companyId);
-		invoiceData.getInvoice().setCreatedBy(userId);
-		invoiceData.getParticulars().forEach(p -> {
+		invoiceData.forEach(p -> {
 			p.setCompanyId(companyId);
 			p.setCreatedBy(userId);
 		});
 
-		Long id = invoiceService.createPerformaInvoice(invoiceData.getInvoice(), invoiceData.getParticulars(),companyId);
-
-		invoiceData.getInvoice().setId(id);
-		invoiceData.getParticulars().forEach(p -> p.setInvoiceTableId(id));
-		log.info("Invoice details response{}", invoiceData);
-		return invoiceData;
+		List<ManufacturingInvoice> invoiceResult= invoiceService.createProformaInvoice(invoiceData,companyId);
+		return invoiceResult;
 	}
 	
 	@PostMapping(path="/invoice", produces = MediaType.APPLICATION_JSON_VALUE)
-	public InvoiceData saveInvoice(@RequestBody InvoiceData invoiceData,
+	public ManufacturingInvoice saveInvoice(@RequestBody ManufacturingInvoice invoiceData,
 			@RequestHeader(name = "x-company-id", required = true) Long companyId,
 			@RequestHeader(name = "x-user-name", required = true) String userId) {
 		log.info("Invoice details request {}", invoiceData);
-
-		invoiceData.getInvoice().setCompanyId(companyId);
-		invoiceData.getInvoice().setCreatedBy(userId);
-		invoiceData.getParticulars().forEach(p -> {
-			p.setCompanyId(companyId);
-			p.setCreatedBy(userId);
-		});
-		Invoice invoice = invoiceService.createInvoice(invoiceData.getInvoice(), invoiceData.getParticulars());
-		invoiceData.setInvoice(invoice);
-		log.info("Invoice details response{}", invoiceData);
-		return invoiceData;
+		ManufacturingInvoice invoice = invoiceService.createInvoice(invoiceData);
+		return invoice;
 	}
 
 	@PostMapping(path = "/search", produces = MediaType.APPLICATION_JSON_VALUE)
-	public Iterable<Invoice> searchInvoice(@RequestParam(required = false) Integer pageNumber,
+	public Iterable<ManufacturingInvoice> searchInvoice(@RequestParam(required = false) Integer pageNumber,
 			@RequestHeader(name = "x-company-id", required = true) Long companyId,
 			@RequestBody InvoiceSearch invoiceSearch) {
 		log.info(
@@ -106,16 +100,23 @@ public class InvoiceController {
 	}
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public InvoiceData getInvoice(@RequestParam(required = true) Long invoiceId) {
-		log.info("Invoice Search Data invoiceId {}", invoiceId);
-		return invoiceService.getInvoiceDetails(invoiceId);
+	public ManufacturingInvoice getInvoice(@RequestParam(required = true) Long id) {
+		log.info("Invoice Search Data invoiceId {}", id);
+		return invoiceService.getInvoiceDetails(id);
+
+	}
+	
+	@GetMapping(path="/byProforma",produces = MediaType.APPLICATION_JSON_VALUE)
+	public ManufacturingInvoice getInvoiceByProfromaId(@RequestParam(required = true) String proformaId) {
+		log.info("Invoice Search Data invoiceId {}", proformaId);
+		return invoiceService.getInvoiceDetails(proformaId);
 
 	}
 	
 	@PatchMapping(produces = MediaType.APPLICATION_JSON_VALUE,path="/cancel")
-	public Invoice cancelInvoice(@RequestParam(required = true) Long invoiceId) {
-		log.info("Cancelling the Invoice invoiceId {}", invoiceId);
-		return invoiceService.cancelInvoice(invoiceId);
+	public ManufacturingInvoice cancelInvoice(@RequestParam(required = true) Long id) {
+		log.info("Cancelling the Invoice invoiceId {}", id);
+		return invoiceService.cancelInvoice(id);
 	}
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,path="/sac")
@@ -123,12 +124,7 @@ public class InvoiceController {
 		log.info("SAC Details");
 		return sacRepo.findAll();
 	}
-	
-	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,path="/delParticular")
-	public String deleteParticulars(@RequestParam Long particularId) {
-		invoiceService.deleteParticular(particularId);
-		return "particular is deleted Successfully";
-	}
+
 	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,path="/sac/byDate")
 	public SACCode getSacByDate(@RequestParam LocalDate date,@RequestParam String sacCode) throws Exception {
@@ -141,6 +137,19 @@ public class InvoiceController {
 
 		return option.orElseThrow(() -> new Exception("SAC code not found for the give date code :"+sacCode+",Date:"+date)); 
 	
+	}
+		
+
+	@RequestMapping(path="/IhtmlReport",method=RequestMethod.GET,produces= "text/html")
+	public @ResponseBody String generateIHtmlInvoice(@RequestParam(required = true) String performaId) throws IOException {
+		log.info("Genetrating the html Invoice {}",performaId);
+		return generateManuInvoiceService.processInvoiceReport(performaId);
+	}
+	
+	@RequestMapping(path="/PhtmlReport",method=RequestMethod.GET,produces= "text/html")
+	public @ResponseBody String generatePHtmlInvoice(@RequestParam(required = true) String performaId) throws IOException {
+		log.info("Genetrating the html Invoice {}",performaId);
+		return generateManuInvoiceService.processPInvoiceReport(performaId);
 	}
 	
 }

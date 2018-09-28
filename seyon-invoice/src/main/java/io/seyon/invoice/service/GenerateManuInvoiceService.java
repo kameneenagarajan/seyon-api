@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.annotation.Resource;
 import javax.persistence.NoResultException;
 
 import org.slf4j.Logger;
@@ -18,18 +17,18 @@ import org.thymeleaf.context.Context;
 import io.seyon.common.util.ConvertNumberToWords;
 import io.seyon.invoice.entity.ClientEntityView;
 import io.seyon.invoice.entity.CompanyView;
-import io.seyon.invoice.entity.Invoice;
+import io.seyon.invoice.entity.ManufacturingInvoice;
 import io.seyon.invoice.entity.Particulars;
 import io.seyon.invoice.repository.ClientViewRepository;
 import io.seyon.invoice.repository.CompanyViewRepository;
-import io.seyon.invoice.repository.InvoiceRepository;
+import io.seyon.invoice.repository.ManufacturingInvoiceRepository;
 import io.seyon.invoice.repository.ParticularsRepository;
 
 @Service
-public class GenerateInvoiceService {
+public class GenerateManuInvoiceService {
 
 	
-	private static final Logger log = LoggerFactory.getLogger(GenerateInvoiceService.class);
+	private static final Logger log = LoggerFactory.getLogger(GenerateManuInvoiceService.class);
 	
 	@Autowired
 	TemplateEngine templateEngine;
@@ -38,9 +37,9 @@ public class GenerateInvoiceService {
 	CompanyViewRepository cr;
 	
 	@Autowired
-	private InvoiceRepository invoiceRepository;
+	private ManufacturingInvoiceRepository manufacturingInvoiceRepository;
 	
-	@Resource
+	@Autowired
 	private ClientViewRepository clientViewRepository;
 	
 	@Autowired
@@ -48,7 +47,7 @@ public class GenerateInvoiceService {
 	
 	public String processInvoiceReport(String performaId) {	
 		final Context ctx=getContext(performaId);
-		return templateEngine.process("invoice.html",ctx);
+		return templateEngine.process("mInvoice.html",ctx);
 	}
 	
 	
@@ -56,23 +55,23 @@ public class GenerateInvoiceService {
 	public String processPInvoiceReport(String performaId) {
 
 		final Context ctx=getContext(performaId);
-		return templateEngine.process("P-invoice.html",ctx);
+		return templateEngine.process("P-mInvoice.html",ctx);
 	}
 	
 	private Context getContext(String performaId) {
-		Optional<Invoice> opInv = invoiceRepository.findByPerformaId(performaId);
+		Optional<ManufacturingInvoice> opInv = manufacturingInvoiceRepository.findByProFormaId(performaId);
 		String totalAmtInWords="";
 		if (!opInv.isPresent()) {
 			new NoResultException("No Invoice Found");
 		}
-		Invoice inv=opInv.get();
+		ManufacturingInvoice inv=opInv.get();
 		if(inv!=null){
-			if(inv.getTotalInvoiceAmount()==null && inv.getTotalPerfomaAmount()!=null ){
-				totalAmtInWords=new ConvertNumberToWords().convertNumber(inv.getTotalPerfomaAmount().longValue()).toUpperCase();
+			if(inv.getCalculatedInvoiceAmount()==null && inv.getCalculatedPerformaAmount()!=null ){
+				totalAmtInWords=new ConvertNumberToWords().convertNumber(inv.getCalculatedPerformaAmount().longValue()).toUpperCase();
 			}
 			else
 			{
-				totalAmtInWords=new ConvertNumberToWords().convertNumber(inv.getTotalInvoiceAmount().longValue()).toUpperCase();
+				totalAmtInWords=new ConvertNumberToWords().convertNumber(inv.getCalculatedInvoiceAmount().longValue()).toUpperCase();
 				
 			}
 		}

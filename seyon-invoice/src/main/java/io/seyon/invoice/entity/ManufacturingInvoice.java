@@ -12,7 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 @Entity
-public class Invoice implements Serializable {
+public class ManufacturingInvoice implements Serializable {
 
 	/**
 	 * 
@@ -28,7 +28,7 @@ public class Invoice implements Serializable {
 
 	// PI-number/facialyear
 	@Column(unique = true, nullable = false)
-	private String performaId;
+	private String proFormaId;
 
 	@Column
 	private Long companyId;
@@ -37,7 +37,7 @@ public class Invoice implements Serializable {
 
 	@Column
 	private String sacCode;
-	
+
 	@Column
 	private String invoiceType;
 
@@ -69,12 +69,6 @@ public class Invoice implements Serializable {
 	private Double totalPerfomaAmount;
 	@Column
 	private Double totalInvoiceAmount;
-	
-	@Column
-	private Double reimbPerfomaAmount;
-	@Column
-	private Double reimbInvoiceAmount;
-	
 	@Column
 	private Double cgstPerfoma;
 	@Column
@@ -87,6 +81,34 @@ public class Invoice implements Serializable {
 	private Double sgstInvoice;
 	@Column
 	private Double igstInvoice;
+
+	@Column(name = "particular_index")
+	private String index;
+	@Column
+	private String itemDescription;
+	@Column
+	private Integer quantity;
+	@Column
+	private String performaRate;
+	@Column
+	private String invoiceRate;
+	@Column
+	private Double calculatedInvoiceAmount;
+	@Column
+	private Double calculatedPerformaAmount;
+
+	@Column
+	private Double reimbPerfomaAmount;
+	@Column
+	private Double reimbInvoiceAmount;
+	
+
+	
+	@Column
+	private Double grossInvoiceAmount;
+	@Column
+	private Double grossPerformaAmount;
+
 
 	@Enumerated(EnumType.STRING)
 	@Column
@@ -113,14 +135,6 @@ public class Invoice implements Serializable {
 
 	public void setInvoiceId(String invoiceId) {
 		this.invoiceId = invoiceId;
-	}
-
-	public String getPerformaId() {
-		return performaId;
-	}
-
-	public void setPerformaId(String performaId) {
-		this.performaId = performaId;
 	}
 
 	public Long getCompanyId() {
@@ -203,21 +217,6 @@ public class Invoice implements Serializable {
 		this.createdDate = createdDate;
 	}
 
-	@Override
-	public String toString() {
-		return "Invoice [id=" + id + ", invoiceId=" + invoiceId + ", performaId=" + performaId + ", companyId="
-				+ companyId + ", clientId=" + clientId + ", sacCode=" + sacCode + ", invoiceType=" + invoiceType
-				+ ", invoiceDate=" + invoiceDate + ", performaDate=" + performaDate + ", cgstPerfomaPercent="
-				+ cgstPerfomaPercent + ", sgstPerfomaPercent=" + sgstPerfomaPercent + ", igstPerfomaPercent="
-				+ igstPerfomaPercent + ", cgstInvoicePercent=" + cgstInvoicePercent + ", sgstInvoicePercent="
-				+ sgstInvoicePercent + ", igstInvoicePercent=" + igstInvoicePercent + ", totalPerfomaBeforeTax="
-				+ totalPerfomaBeforeTax + ", totalInvoiceBeforeTax=" + totalInvoiceBeforeTax + ", totalPerfomaAmount="
-				+ totalPerfomaAmount + ", totalInvoiceAmount=" + totalInvoiceAmount + ", reimbPerfomaAmount="
-				+ reimbPerfomaAmount + ", reimbInvoiceAmount=" + reimbInvoiceAmount + ", cgstPerfoma=" + cgstPerfoma
-				+ ", sgstPerfoma=" + sgstPerfoma + ", igstPerfoma=" + igstPerfoma + ", cgstInvoice=" + cgstInvoice
-				+ ", sgstInvoice=" + sgstInvoice + ", igstInvoice=" + igstInvoice + ", status=" + status
-				+ ", createdBy=" + createdBy + ", createdDate=" + createdDate + ", type=" + type + "]";
-	}
 
 	public String getType() {
 		return type;
@@ -339,6 +338,79 @@ public class Invoice implements Serializable {
 		this.igstInvoice = igstInvoice;
 	}
 
+	public String getInvoiceType() {
+		return invoiceType;
+	}
+
+	public void setInvoiceType(String invoiceType) {
+		this.invoiceType = invoiceType;
+	}
+
+	public String getIndex() {
+		return index;
+	}
+
+	public void setIndex(String index) {
+		this.index = index;
+	}
+
+	public String getItemDescription() {
+		return itemDescription;
+	}
+
+	public void setItemDescription(String itemDescription) {
+		this.itemDescription = itemDescription;
+	}
+
+	public Integer getQuantity() {
+		return quantity;
+	}
+
+	public void setQuantity(Integer quantity) {
+		this.quantity = quantity;
+	}
+
+	public String getPerformaRate() {
+		return performaRate;
+	}
+
+	public void setPerformaRate(String performaRate) {
+		this.performaRate = performaRate;
+	}
+
+	public String getInvoiceRate() {
+		return invoiceRate;
+	}
+
+	public void setInvoiceRate(String invoiceRate) {
+		this.invoiceRate = invoiceRate;
+	}
+
+	public Double getCalculatedInvoiceAmount() {
+		return calculatedInvoiceAmount;
+	}
+
+	public void setCalculatedInvoiceAmount(Double calculatedInvoiceAmount) {
+		this.calculatedInvoiceAmount = calculatedInvoiceAmount;
+	}
+
+	public Double getCalculatedPerformaAmount() {
+		return calculatedPerformaAmount;
+	}
+
+	public void setCalculatedPerformaAmount(Double calculatedPerformaAmount) {
+		this.calculatedPerformaAmount = calculatedPerformaAmount;
+	}
+
+	public String getProFormaId() {
+		return proFormaId;
+	}
+
+	public void setProFormaId(String proFormaId) {
+		this.proFormaId = proFormaId;
+	}
+
+
 	public Double getReimbPerfomaAmount() {
 		return reimbPerfomaAmount;
 	}
@@ -355,4 +427,41 @@ public class Invoice implements Serializable {
 		this.reimbInvoiceAmount = reimbInvoiceAmount;
 	}
 
+
+	public Double getGrossInvoiceAmount() {
+		return grossInvoiceAmount;
+	}
+
+	public void setGrossInvoiceAmount(Double grossInvoiceAmount) {
+		this.grossInvoiceAmount = grossInvoiceAmount;
+	}
+
+	public Double getGrossPerformaAmount() {
+		return grossPerformaAmount;
+	}
+
+	public void setGrossPerformaAmount(Double grossPerformaAmount) {
+		this.grossPerformaAmount = grossPerformaAmount;
+	}
+
+	@Override
+	public String toString() {
+		return "ManufacturingInvoice [id=" + id + ", invoiceId=" + invoiceId + ", proFormaId=" + proFormaId
+				+ ", companyId=" + companyId + ", clientId=" + clientId + ", sacCode=" + sacCode + ", invoiceType="
+				+ invoiceType + ", invoiceDate=" + invoiceDate + ", performaDate=" + performaDate
+				+ ", cgstPerfomaPercent=" + cgstPerfomaPercent + ", sgstPerfomaPercent=" + sgstPerfomaPercent
+				+ ", igstPerfomaPercent=" + igstPerfomaPercent + ", cgstInvoicePercent=" + cgstInvoicePercent
+				+ ", sgstInvoicePercent=" + sgstInvoicePercent + ", igstInvoicePercent=" + igstInvoicePercent
+				+ ", totalPerfomaBeforeTax=" + totalPerfomaBeforeTax + ", totalInvoiceBeforeTax="
+				+ totalInvoiceBeforeTax + ", totalPerfomaAmount=" + totalPerfomaAmount + ", totalInvoiceAmount="
+				+ totalInvoiceAmount + ", cgstPerfoma=" + cgstPerfoma + ", sgstPerfoma=" + sgstPerfoma
+				+ ", igstPerfoma=" + igstPerfoma + ", cgstInvoice=" + cgstInvoice + ", sgstInvoice=" + sgstInvoice
+				+ ", igstInvoice=" + igstInvoice + ", index=" + index + ", itemDescription=" + itemDescription
+				+ ", quantity=" + quantity + ", performaRate=" + performaRate + ", invoiceRate=" + invoiceRate
+				+ ", calculatedInvoiceAmount=" + calculatedInvoiceAmount + ", calculatedPerformaAmount="
+				+ calculatedPerformaAmount + ", grossInvoiceAmount=" + grossInvoiceAmount + ", grossPerformaAmount="
+				+ grossPerformaAmount + ", status=" + status + ", createdBy=" + createdBy + ", createdDate="
+				+ createdDate + ", type=" + type + "]";
+	}
+	
 }
