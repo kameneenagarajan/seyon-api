@@ -45,6 +45,7 @@ public class SeyonTestDataLoader implements CommandLineRunner {
 		 
 		 createCompanyAndUser();
 		 createSACCodes();
+		 createClients();
 	     
 	    }
 	 
