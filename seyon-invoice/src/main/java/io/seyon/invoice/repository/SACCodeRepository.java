@@ -13,4 +13,7 @@ public interface SACCodeRepository extends CrudRepository<SACCode, Long> {
 
 	@Query("from SACCode where sacCode=:sacCode and startDate<=:invoiceDate")
 	List<SACCode> findByDate(@Param(value = "invoiceDate") LocalDate invoiceDate,@Param(value = "sacCode") String sacCode);
+	
+	@Query("from SACCode where sacCode=:sacCode")
+	List<SACCode> findBySACCode(@Param(value = "sacCode") String sacCode);
 }

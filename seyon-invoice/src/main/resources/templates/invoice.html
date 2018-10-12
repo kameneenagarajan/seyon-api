@@ -48,7 +48,9 @@ h1, h2, h3, h4, h5, h6, p {
 			<td></td>
 		</tr>
 		<tr>
-			<td colspan="3"> <img th:src=${company.logoImg}/></td>
+			<td colspan="3"><!--  <img th:src=${company.logoImg}/> -->
+			<img height="100" id="img-logo" th:src=${company.logoImg} />
+			</td>
 			<td colspan="6" align="center">
 				<h2 th:text="${company.companyName}" >Kameshwaran & Kausik</h2>
 				<h3 th:text="${company.title}">Chartered Accountants</h3>
@@ -59,7 +61,7 @@ h1, h2, h3, h4, h5, h6, p {
 		</tr>
 		<tr>
 			<td colspan="12" align="center" class="border">
-				<h3>Professional Invoice</h3>
+				<h3>Service Invoice</h3>
 			</td>
 		</tr>
 		<tr>
@@ -136,15 +138,15 @@ h1, h2, h3, h4, h5, h6, p {
 			<th align="center" class="border" colspan="1">
 			 Sl No :
 			</th>
-			<th align="center" class="border" colspan="5">
+			<th align="center" class="border" colspan="6">
 			  Particulars of Service
 			</th>
 			<th align="center" class="border" colspan="1">
 			  SAC Code
 			</th>
-			<th align="center" class="border" colspan="1">
+			<!-- <th align="center" class="border" colspan="1">
 			  QTY
-			</th>
+			</th> -->
 			<th align="center" class="border" colspan="2">
 			  Rate 
 			</th>
@@ -157,15 +159,15 @@ h1, h2, h3, h4, h5, h6, p {
 			<td align="center" class="border" colspan="1" th:text="${iter.index+1}">
 			 1
 			</td>
-			<td align="center" class="border" colspan="5" th:text="${particular.itemDescription}">
+			<td align="center" class="border" colspan="6" th:text="${particular.itemDescription}">
 			  Particulars of Service
 			</td>
 			<td align="center" class="border" colspan="1" th:text="${invoice.sacCode}">
 			  SAC Code
 			</td>
-			<td align="center" class="border" colspan="1" th:text="${particular.quantity}">
+			<!-- <td align="center" class="border" colspan="1" th:text="${particular.quantity}">
 			  QTY
-			</td>
+			</td> -->
 			<td align="center" class="border" colspan="2" th:text="${particular.invoiceRate}">
 			  Rate 
 			</td>
@@ -175,7 +177,7 @@ h1, h2, h3, h4, h5, h6, p {
 		</tr>
 		<tr>
 			<td align="center" class="border" colspan="8" th:text="${totalAmtInWords}">
-			<!-- ${#strings.toUpperCase('totalAmtInWords')} " -->
+			
 			</td>
 			<td align="center" class="border" colspan="2">
 			  Gross amount (A)
@@ -227,13 +229,27 @@ h1, h2, h3, h4, h5, h6, p {
 			  45000
 			</td>
 		</tr>
+		
+		<tr>
+			
+			<td align="center" class="border" colspan="2">
+			  Reimbursement
+			</td>
+			<td align="center" class="border" colspan="2">
+			   
+			</td>
+			<td align="center" class="border" colspan="2" th:text="${invoice.reimbInvoiceAmount}">
+			  45000
+			</td>
+			
+		</tr>
 		<tr>
 			
 			<td align="center" class="border" colspan="2">
 			  Total Amount
 			</td>
 			<td align="center" class="border" colspan="2">
-			  A + B
+			  A + B + Reimbursement
 			</td>
 			<td align="center" class="border" colspan="2" th:text="${invoice.totalInvoiceAmount}">
 			  45000

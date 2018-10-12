@@ -48,7 +48,9 @@ h1, h2, h3, h4, h5, h6, p {
 			<td></td>
 		</tr>
 		<tr>
-			<td colspan="3"> <img th:src=${company.logoImg}/></td>
+			<td colspan="3"><!--  <img th:src=${company.logoImg}/> -->
+			<img height="100" id="img-logo" th:src=${company.logoImg} />
+			</td>
 			<td colspan="6" align="center">
 				<h2 th:text="${company.companyName}" >Kameshwaran & Kausik</h2>
 				<h3 th:text="${company.title}">Chartered Accountants</h3>
@@ -86,12 +88,6 @@ h1, h2, h3, h4, h5, h6, p {
 			</th>
 			<td align="center" class="border" colspan="3" th:text="${company.state}">
 			  KARNATAKA
-			</td>
-			<th align="right" class="border" colspan="3">
-			   State Code : 
-			</th>
-			<td align="center" class="border" colspan="3">
-			 29
 			</td>
 		</tr>
 		<tr>
@@ -133,10 +129,10 @@ h1, h2, h3, h4, h5, h6, p {
 			</td>
 		</tr>
 		<tr>
-			<th align="center" class="border" colspan="1">
+			<!-- <th align="center" class="border" colspan="1">
 			 Sl No :
-			</th>
-			<th align="center" class="border" colspan="5">
+			</th> -->
+			<th align="center" class="border" colspan="6">
 			  Particulars of Service
 			</th>
 			<th align="center" class="border" colspan="1">
@@ -153,11 +149,9 @@ h1, h2, h3, h4, h5, h6, p {
 			</th>
 		</tr>
 		
-		<tr th:each="particular,iter  : ${particulars}">
-			<td align="center" class="border" colspan="1" th:text="${iter.index+1}">
-			 1
-			</td>
-			<td align="center" class="border" colspan="5" th:text="${particular.itemDescription}">
+		<tr>
+		
+			<td align="center" class="border" colspan="6" th:text="${invoice.itemDescription}">
 			  Particulars of Service
 			</td>
 			<td align="center" class="border" colspan="1" th:text="${invoice.sacCode}">

@@ -10,4 +10,6 @@ public interface ClientRepository extends JpaRepository<ClientEntity, Long>{
 
 	List<ClientEntity> findByCompanyId(Long companyId);
 	
+	List<ClientEntity> findByName(String name);
+	
 }
