@@ -100,8 +100,38 @@ public class GenerateInvoiceService {
 		variables.put("particulars", parti);
 		variables.put("company", cmp);
 		variables.put("client", cev);
+		variables.put("additionPDetails",additionPDetails(inv));
+		variables.put("additionDetails",additionDetails(inv));
 		ctx.setVariables(variables);
 		
 		return ctx;
 	}
+	
+	private String additionDetails(Invoice inv) {
+		String ret="A";
+		
+		if((null!=inv.getIgstInvoice() && !inv.getIgstInvoice().equals(0d))
+				||(null!=inv.getCgstInvoice() && !inv.getCgstInvoice().equals(0d))
+				||(null!=inv.getSgstInvoice() && !inv.getSgstInvoice().equals(0d))) {
+			ret=ret+" + GST";
+		}
+		if(null!=inv.getReimbInvoiceAmount()&&!inv.getReimbInvoiceAmount().equals(0d)) {
+			ret=ret+" + Reimbursement";
+		}
+		return ret;
+	}
+	private String additionPDetails(Invoice inv) {
+		String ret="A";
+		
+		if((null!=inv.getIgstPerfoma() && !inv.getIgstPerfoma().equals(0d))
+				|| (null!=inv.getCgstPerfoma() && !inv.getCgstPerfoma().equals(0d))
+				|| (null!=inv.getSgstPerfoma() && !inv.getSgstPerfoma().equals(0d))) {
+			ret=ret+" + GST";
+		}
+		if(null!=inv.getReimbPerfomaAmount() && !inv.getReimbPerfomaAmount().equals(0d)) {
+			ret=ret+" + Reimbursement";
+		}
+		return ret;
+	}
+	
 }

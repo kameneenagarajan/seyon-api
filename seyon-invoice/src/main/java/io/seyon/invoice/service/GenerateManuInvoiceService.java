@@ -17,6 +17,7 @@ import org.thymeleaf.context.Context;
 import io.seyon.common.util.ConvertNumberToWords;
 import io.seyon.invoice.entity.ClientEntityView;
 import io.seyon.invoice.entity.CompanyView;
+import io.seyon.invoice.entity.Invoice;
 import io.seyon.invoice.entity.ManufacturingInvoice;
 import io.seyon.invoice.entity.Particulars;
 import io.seyon.invoice.repository.ClientViewRepository;
@@ -99,8 +100,37 @@ public class GenerateManuInvoiceService {
 		variables.put("particulars", parti);
 		variables.put("company", cmp);
 		variables.put("client", cev);
+		variables.put("additionPDetails",additionPDetails(inv));
+		variables.put("additionDetails",additionDetails(inv));
 		ctx.setVariables(variables);
 		
 		return ctx;
+	}
+	
+	private String additionDetails(ManufacturingInvoice inv) {
+		String ret="A";
+		
+		if((null!=inv.getIgstInvoice() && !inv.getIgstInvoice().equals(0d))
+				||(null!=inv.getCgstInvoice() && !inv.getCgstInvoice().equals(0d))
+				||(null!=inv.getSgstInvoice() && !inv.getSgstInvoice().equals(0d))) {
+			ret=ret+" + GST";
+		}
+		if(null!=inv.getReimbInvoiceAmount()&&!inv.getReimbInvoiceAmount().equals(0d)) {
+			ret=ret+" + Reimbursement";
+		}
+		return ret;
+	}
+	private String additionPDetails(ManufacturingInvoice inv) {
+		String ret="A";
+		
+		if((null!=inv.getIgstPerfoma() && !inv.getIgstPerfoma().equals(0d))
+				|| (null!=inv.getCgstPerfoma() && !inv.getCgstPerfoma().equals(0d))
+				|| (null!=inv.getSgstPerfoma() && !inv.getSgstPerfoma().equals(0d))) {
+			ret=ret+" + GST";
+		}
+		if(null!=inv.getReimbPerfomaAmount() && !inv.getReimbPerfomaAmount().equals(0d)) {
+			ret=ret+" + Reimbursement";
+		}
+		return ret;
 	}
 }

@@ -132,10 +132,13 @@ h1, h2, h3, h4, h5, h6, p {
 			<!-- <th align="center" class="border" colspan="1">
 			 Sl No :
 			</th> -->
-			<th align="center" class="border" colspan="6">
+			<th align="center" class="border" colspan="7" th:if="${invoice.sacCode == null or invoice.sacCode == '' }">
 			  Particulars of Service
 			</th>
-			<th align="center" class="border" colspan="1">
+			<th align="center" class="border" colspan="6" th:if="${invoice.sacCode != null and invoice.sacCode != ''}">
+			  Particulars of Service
+			</th>
+			<th align="center" class="border" colspan="1" th:if="${invoice.sacCode != null and invoice.sacCode != ''}">
 			  SAC Code
 			</th>
 			<th align="center" class="border" colspan="1">
@@ -151,10 +154,13 @@ h1, h2, h3, h4, h5, h6, p {
 		
 		<tr>
 		
-			<td align="center" class="border" colspan="6" th:text="${invoice.itemDescription}">
+			<td align="center" class="border" colspan="7" th:if="${invoice.sacCode == null or invoice.sacCode == '' }"  th:text="${invoice.itemDescription}">
 			  Particulars of Service
 			</td>
-			<td align="center" class="border" colspan="1" th:text="${invoice.sacCode}">
+			<td align="center" class="border" colspan="6" th:if="${invoice.sacCode != null and invoice.sacCode != ''}"  th:text="${invoice.itemDescription}">
+			  Particulars of Service
+			</td>
+			<td align="center" class="border" colspan="1" th:if="${invoice.sacCode != null and invoice.sacCode != ''}" th:text="${invoice.sacCode}">
 			  SAC Code
 			</td>
 			<td align="center" class="border" colspan="1" th:text="${invoice.quantity}">
@@ -187,37 +193,37 @@ h1, h2, h3, h4, h5, h6, p {
 			  <p><u>Payment Terms</u></p>
 			  <p><small>Immediate</small></p>
 			</td>
-			<td align="center" class="border" colspan="2">
+			<td align="center" class="border" colspan="2" th:if="${invoice.cgstInvoice != null and invoice.cgstInvoice gt 0}">
 			  Add: CGST 
 			</td>
-			<td align="center" class="border" colspan="2" th:text="${invoice.cgstInvoicePercent}">
+			<td align="center" class="border" colspan="2" th:text="${invoice.cgstInvoicePercent}" th:if="${invoice.cgstInvoice != null and invoice.cgstInvoice gt 0}">
 			  45000 
 			</td>
-			<td align="center" class="border" colspan="2" th:text="${invoice.cgstInvoice}">
+			<td align="center" class="border" colspan="2" th:text="${invoice.cgstInvoice}" th:if="${invoice.cgstInvoice != null and invoice.cgstInvoice gt 0}">
 			  45000
 			</td>
 		</tr>
 		<tr>
 			
-			<td align="center" class="border" colspan="2">
+			<td align="center" class="border" colspan="2" th:if="${invoice.sgstInvoice != null and invoice.sgstInvoice gt 0}">
 			   Add: SGST 
 			</td>
-			<td align="center" class="border" colspan="2" th:text="${invoice.sgstInvoicePercent}">
+			<td align="center" class="border" colspan="2" th:text="${invoice.sgstInvoicePercent}" th:if="${invoice.sgstInvoice != null and invoice.sgstInvoice gt 0}">
 			  45000
 			</td>
-			<td align="center" class="border" colspan="2" th:text="${invoice.sgstInvoice}">
+			<td align="center" class="border" colspan="2" th:text="${invoice.sgstInvoice}" th:if="${invoice.sgstInvoice != null and invoice.sgstInvoice gt 0}">
 			  45000
 			</td>
 		</tr>
 		<tr>
 			
-			<td align="center" class="border" colspan="2">
+			<td align="center" class="border" colspan="2" th:if="${invoice.igstInvoice != null and invoice.igstInvoice gt 0}">
 			   Add: IGST 
 			</td>
-			<td align="center" class="border" colspan="2" th:text="${invoice.igstInvoicePercent}">
+			<td align="center" class="border" colspan="2" th:text="${invoice.igstInvoicePercent}" th:if="${invoice.igstInvoice != null and invoice.igstInvoice gt 0}">
 			  45000
 			</td>
-			<td align="center" class="border" colspan="2" th:text="${invoice.igstInvoice}">
+			<td align="center" class="border" colspan="2" th:text="${invoice.igstInvoice}" th:if="${invoice.igstInvoice != null and invoice.igstInvoice gt 0}">
 			  45000
 			</td>
 		</tr>
@@ -226,7 +232,7 @@ h1, h2, h3, h4, h5, h6, p {
 			<td align="center" class="border" colspan="2">
 			  Total Amount
 			</td>
-			<td align="center" class="border" colspan="2">
+			<td align="center" class="border" colspan="2" th:text="${additionDetails}">
 			  A + B
 			</td>
 			<td align="center" class="border" colspan="2" th:text="${invoice.calculatedInvoiceAmount}">

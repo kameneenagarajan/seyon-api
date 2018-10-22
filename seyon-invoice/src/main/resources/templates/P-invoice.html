@@ -138,10 +138,13 @@ h1, h2, h3, h4, h5, h6, p {
 			<th align="center" class="border" colspan="1">
 			 Sl No :
 			</th>
-			<th align="center" class="border" colspan="7">
+			<th  align="center" class="border" th:if="${invoice.sacCode == null or invoice.sacCode == '' }" colspan="9">
 			  Particulars of Service
 			</th>
-			<th align="center" class="border" colspan="2">
+			<th align="center" class="border" th:if="${invoice.sacCode != null and invoice.sacCode != ''}" colspan="7">
+			  Particulars of Service
+			</th>
+			<th align="center" class="border" colspan="2" th:if="${invoice.sacCode != null and invoice.sacCode != ''}" >
 			  SAC Code
 			</th>
 			<!-- <th align="center" class="border" colspan="1">
@@ -159,10 +162,14 @@ h1, h2, h3, h4, h5, h6, p {
 			<td align="center" class="border" colspan="1" th:text="${iter.index+1}">
 			 1
 			</td>
-			<td align="center" class="border" colspan="7" th:text="${particular.itemDescription}">
+			<td align="center" class="border" th:if="${invoice.sacCode == null or invoice.sacCode == '' }" colspan="9" th:text="${particular.itemDescription}">
 			  Particulars of Service
 			</td>
-			<td align="center" class="border" colspan="2" th:text="${invoice.sacCode}">
+			<td align="center" class="border" th:if="${invoice.sacCode != null and invoice.sacCode != ''}" colspan="7" th:text="${particular.itemDescription}">
+			  Particulars of Service
+			</td>
+			
+			<td align="center" class="border" colspan="2" th:if="${invoice.sacCode != null and invoice.sacCode != ''}" th:text="${invoice.sacCode}">
 			  SAC Code
 			</td>
 			<!-- <td align="center" class="border" colspan="1" th:text="${particular.quantity}">
@@ -187,7 +194,7 @@ h1, h2, h3, h4, h5, h6, p {
 		</tr>
 		<tr th:if="${invoice.reimbPerfomaAmount != null and invoice.reimbPerfomaAmount gt 0}">
 			
-			<td align="center" class="border" colspan="10">
+			<td align="right" class="border" colspan="10">
 			  Reimbursement
 			</td>
 			
@@ -247,7 +254,7 @@ h1, h2, h3, h4, h5, h6, p {
 			<td align="center" class="border" colspan="2">
 			  Total Amount
 			</td>
-			<td align="center" class="border" colspan="2">
+			<td align="center" class="border" colspan="2" th:text="${additionPDetails}">
 			  A + B + Reimbursement
 			</td>
 			<td align="center" class="border" colspan="2" th:text="${invoice.totalPerfomaAmount}">
