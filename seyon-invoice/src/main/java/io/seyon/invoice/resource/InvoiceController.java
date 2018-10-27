@@ -105,6 +105,34 @@ public class InvoiceController {
 
 	}
 
+	
+	@PostMapping(path = "/getInvoiceReport", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Iterable<Invoice> searchInvoiceReport(@RequestHeader(name = "x-company-id", required = true) Long companyId,
+			@RequestBody InvoiceSearch invoiceSearch) {
+		log.info(
+				"Invoice Search Data ,companyId {},"
+						+ "invoiceId {},clientId {}, invoice Start Date {},Invoice end date {},invoice Status {}",
+				 companyId, invoiceSearch.getId(), invoiceSearch.getClientId(),
+				invoiceSearch.getInvoiceStDate(), invoiceSearch.getInvoiceEdDate(), invoiceSearch.getStatus());
+
+		if (companyId == null)
+			throw new IllegalArgumentException("Company Id is null");
+		if (null != invoiceSearch.getInvoiceStDate() && null == invoiceSearch.getInvoiceEdDate())
+			throw new IllegalArgumentException("End date is null");
+		if (null != invoiceSearch.getInvoiceEdDate() && null == invoiceSearch.getInvoiceStDate())
+			throw new IllegalArgumentException("Start date is null");
+		
+		if(null!=invoiceSearch.getInvoiceEdDate() && null!=invoiceSearch.getInvoiceEdDate() && !invoiceSearch.getInvoiceStDate().equals(invoiceSearch.getInvoiceEdDate()) 
+				&& invoiceSearch.getInvoiceEdDate().before(invoiceSearch.getInvoiceStDate())) {
+			throw new IllegalArgumentException("End date is greater than start date");
+		}
+
+		return invoiceService.getInvoiceListNoPage(companyId, invoiceSearch.getId(), invoiceSearch.getClientId(),
+				invoiceSearch.getInvoiceStDate(), invoiceSearch.getInvoiceEdDate(), invoiceSearch.getStatus(),invoiceSearch.getType(),
+				invoiceSearch.getInvoiceId(),invoiceSearch.getPerformaId());
+
+	}
+	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public InvoiceData getInvoice(@RequestParam(required = true) Long invoiceId) {
 		log.info("Invoice Search Data invoiceId {}", invoiceId);
@@ -124,6 +152,8 @@ public class InvoiceController {
 		return sacRepo.findAll();
 	}
 	
+	
+	
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,path="/delParticular")
 	public String deleteParticulars(@RequestParam Long particularId) {
 		invoiceService.deleteParticular(particularId);
@@ -140,7 +170,22 @@ public class InvoiceController {
 		 }).findFirst();
 
 		return option.orElseThrow(() -> new Exception("SAC code not found for the give date code :"+sacCode+",Date:"+date)); 
+	}
 	
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,path="/minProformaDate")
+	public String getMinProfomaDate(@RequestHeader(name = "x-company-id", required = true) Long companyId) {
+		log.info("getMinProfomaDate for companyid {}", companyId);
+		LocalDate minProformaDate = invoiceService.getMinProfomaDate(companyId);
+		return minProformaDate.toString();
+		
+	}
+	
+	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE,path="/minInvoiceDate")
+	public String getMinInvoiceDate(@RequestHeader(name = "x-company-id", required = true) Long companyId) {
+		log.info("getMinInvoiceDate for companyid {}", companyId);
+		LocalDate minProformaDate = invoiceService.getMinInvoiceDate(companyId);
+		return minProformaDate.toString();
+		
 	}
 	
 }

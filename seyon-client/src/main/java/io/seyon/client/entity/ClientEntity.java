@@ -89,7 +89,7 @@ public class ClientEntity implements Serializable {
 	@Column(nullable=true)
 	String createdBy;
 	
-	@Column(nullable=true)
+	/*@Column(nullable=true)
 	String shipToAddrLine1;
 	
 	@Column(nullable=true)
@@ -102,7 +102,7 @@ public class ClientEntity implements Serializable {
 	String shipToAddrState;
 	
 	@Column(nullable=true)
-	String shipToAddrPincode;
+	String shipToAddrPincode;*/
 	
 	
 	
@@ -264,7 +264,7 @@ public class ClientEntity implements Serializable {
 		this.createdBy = createdBy;
 	}
 
-	public String getShipToAddrLine1() {
+	/*public String getShipToAddrLine1() {
 		return shipToAddrLine1;
 	}
 
@@ -302,7 +302,7 @@ public class ClientEntity implements Serializable {
 
 	public void setShipToAddrPincode(String shipToAddrPincode) {
 		this.shipToAddrPincode = shipToAddrPincode;
-	}
+	}*/
 
 	public String getEmail() {
 		return email;
@@ -319,9 +319,7 @@ public class ClientEntity implements Serializable {
 				+ city + ", state=" + state + ", pincode=" + pincode + ", phonePrimary=" + phonePrimary
 				+ ", phoneSecondary=" + phoneSecondary + ", faxNo=" + faxNo + ", pan=" + pan + ", gstin=" + gstin
 				+ ", ServiceTaxRegNo=" + ServiceTaxRegNo + ", companyId=" + companyId + ", active=" + active
-				+ ", createDate=" + createDate + ", createdBy=" + createdBy + ", shipToAddrLine1=" + shipToAddrLine1
-				+ ", shipToAddrLine2=" + shipToAddrLine2 + ", shipToAddrCity=" + shipToAddrCity + ", shipToAddrState="
-				+ shipToAddrState + ", shipToAddrPincode=" + shipToAddrPincode + "]";
+				+ ", createDate=" + createDate + ", createdBy=" + createdBy + "]";
 	}
 
 

@@ -1,6 +1,7 @@
 package io.seyon.user.resource;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import io.seyon.user.entity.UserInfo;
 import io.seyon.user.entity.UserRole;
 import io.seyon.user.model.SeyonResponse;
 import io.seyon.user.service.UserService;
@@ -49,5 +51,13 @@ public class UserRoleController {
 	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,path = "/getRolesOpen")
 	public List<UserRole> getUserRolesOpen(@RequestParam(required = true) String email) {
 		return userService.getUserRoles(email);
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE,path="/authenticated")
+	public List<String> getLoggedInUser(@RequestHeader(name = "x-user-email", required = true) String userId) {
+		log.info("user Id"+userId);
+		List<String> roleCodes=userService.getUserRoles(userId).stream()
+				.map(role->role.getRoleCode()).collect(Collectors.toList());
+		return roleCodes;
 	}
 }

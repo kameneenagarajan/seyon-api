@@ -100,6 +100,48 @@ public class ManufacturingInvoiceService {
 		return manufacturingInvoiceRepository.findAll(spec, page);
 	}
 
+	public Iterable<ManufacturingInvoice> getInvoiceList(Long companyId, Long id, Long clientId,
+			Date invoiceStDate, Date invoiceEdDate, InvoiceStatus status, String type, String invoiceId,
+			String performaId) {
+
+
+		Specification<ManufacturingInvoice> spec = (Root<ManufacturingInvoice> root, CriteriaQuery<?> cq, CriteriaBuilder cb) -> {
+			List<Predicate> predicates = new ArrayList<>();
+			predicates.add(cb.equal(root.get("companyId"), companyId));
+
+			if (null != id) {
+				predicates.add(cb.equal(root.get("id"), id));
+			}
+			if (null != clientId) {
+				predicates.add(cb.equal(root.get("clientId"), clientId));
+			}
+
+			if (!StringUtils.isEmpty(invoiceId)) {
+				predicates.add(cb.equal(root.get("invoiceId"), invoiceId));
+			}
+
+			if (!StringUtils.isEmpty(performaId)) {
+				predicates.add(cb.equal(root.get("performaId"), performaId));
+			}
+
+			if (!StringUtils.isEmpty(status)) {
+				predicates.add(cb.equal(root.get("status"), status));
+			}
+
+			if (!StringUtils.isEmpty(type)) {
+				predicates.add(cb.equal(root.get("type"), type));
+			}
+
+			if (null != invoiceStDate && null != invoiceEdDate) {
+				predicates.add(cb.or(cb.between(root.get("invoiceDate"), invoiceStDate, invoiceEdDate),
+						cb.between(root.get("performaDate"), invoiceStDate, invoiceEdDate)));
+			}
+			return cb.and(predicates.toArray(new Predicate[] {}));
+		};
+
+		return manufacturingInvoiceRepository.findAll(spec);
+	}
+
 	public ManufacturingInvoice createInvoice(ManufacturingInvoice invoiceData) {
 		return manufacturingInvoiceRepository.save(invoiceData);
 	}

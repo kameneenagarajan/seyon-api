@@ -80,12 +80,12 @@ public class SeyonTestDataLoader implements CommandLineRunner {
 				clientEntity.setGstin("G12341234123456789");
 				clientEntity.setName("Client1");
 				clientEntity.setPan("P459459856325");
-				clientEntity.setPhonePrimary("98045678901");
+				/*clientEntity.setPhonePrimary("98045678901");
 				clientEntity.setShipToAddrCity("Chennai");
 				clientEntity.setShipToAddrLine1("22 client st");
 				clientEntity.setShipToAddrLine2("c area");
 				clientEntity.setShipToAddrPincode("600600");
-				clientEntity.setShipToAddrState("TN");
+				clientEntity.setShipToAddrState("TN");*/
 				
 			}
 			

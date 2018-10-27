@@ -1,6 +1,9 @@
 package io.seyon.invoice.service;
 
+import java.sql.Timestamp;
 import java.time.Instant;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -94,6 +97,47 @@ public class InvoiceService {
 		return invoiceRepository.findAll(spec, page);
 	}
 
+	public Iterable<Invoice> getInvoiceListNoPage(Long companyId, Long id, Long clientId,
+			Date invoiceStDate, Date invoiceEdDate, InvoiceStatus status, String type, String invoiceId,
+			String performaId) {
+
+		Specification<Invoice> spec = (Root<Invoice> root, CriteriaQuery<?> cq, CriteriaBuilder cb) -> {
+			List<Predicate> predicates = new ArrayList<>();
+			predicates.add(cb.equal(root.get("companyId"), companyId));
+
+			if (null != id) {
+				predicates.add(cb.equal(root.get("id"), id));
+			}
+			if (null != clientId) {
+				predicates.add(cb.equal(root.get("clientId"), clientId));
+			}
+
+			if (!StringUtils.isEmpty(invoiceId)) {
+				predicates.add(cb.equal(root.get("invoiceId"), invoiceId));
+			}
+
+			if (!StringUtils.isEmpty(performaId)) {
+				predicates.add(cb.equal(root.get("performaId"), performaId));
+			}
+
+			if (!StringUtils.isEmpty(status)) {
+				predicates.add(cb.equal(root.get("status"), status));
+			}
+
+			if (!StringUtils.isEmpty(type)) {
+				predicates.add(cb.equal(root.get("type"), type));
+			}
+
+			if (null != invoiceStDate && null != invoiceEdDate) {
+				predicates.add(cb.or(cb.between(root.get("invoiceDate"), invoiceStDate, invoiceEdDate),
+						cb.between(root.get("performaDate"), invoiceStDate, invoiceEdDate)));
+			}
+			return cb.and(predicates.toArray(new Predicate[] {}));
+		};
+
+		return invoiceRepository.findAll(spec);
+	}
+	
 	public Long createPerformaInvoice(Invoice invoice, List<Particulars> particulars,Long companyId) {
 		log.info("Saving the invoice");
 		if (null == invoice) {
@@ -120,6 +164,142 @@ public class InvoiceService {
 
 		return invoiceId;
 
+	}
+	
+	
+	public LocalDate getMinProfomaDate(Long companyId){
+		
+		LocalDate minProfomoDate =  LocalDate.now();
+		LocalDate currentDate= LocalDate.now();
+		
+		
+		try {
+			
+			/**
+			 * Logic
+			 * 0 - Query the repository for the previous profomo date of the company
+			 * 1. IF the profomaDate falls within this month and date >= previous profoma date and date =<today
+			 * 		Then proforma date is allowed
+			 * 2. IF the profomaDate falls previous month and todays date is <= first 5 days of the current month 
+ 				THen we can enter the previous month profoma date on these conditions
+ 					Profoma date must be >= previous profoma date(previous month) and proforma date is allowed till the last day of the previous month
+			 * 3. IF the profomaDate falls before the previous month or the current month --> Not allowed
+			 * 4. ProfomaDate cannot be selected for future date(may be block this in the calendar widget itself)3
+			 */
+			
+			Timestamp lastProformaDateTime = invoiceRepository.getLastProformaDate(companyId);
+			
+			if(lastProformaDateTime != null)
+			{
+				minProfomoDate=lastProformaDateTime.toLocalDateTime().toLocalDate();
+			}
+			else{
+				return currentDate.withDayOfMonth(1).minusDays(1);
+			}
+			
+			int currentMonthValue =currentDate.getMonth().getValue();
+			int minprofomaMonthValue = minProfomoDate.getMonth().getValue();
+			if( currentMonthValue ==  minprofomaMonthValue){ // Month Value starts from 1 
+				return minProfomoDate.minusDays(1);
+			}
+			else if (minprofomaMonthValue == (currentMonthValue-1)  )
+			{
+				if(currentDate.getDayOfMonth()<5){ //first 5 days of the month
+					return minProfomoDate.minusDays(1);
+				}
+				else
+				{
+					return currentDate.withDayOfMonth(1).minusDays(1);
+				}
+			}
+			else
+			{
+				return currentDate.withDayOfMonth(1).minusDays(1);
+			}
+			
+		} catch (Exception e) {
+			log.error("Error in getMinProfomaDate {}", e);
+		}
+		
+		return minProfomoDate.minusDays(1);
+		
+	}
+	
+	
+public LocalDate getMinInvoiceDate(Long companyId){
+		
+		LocalDate minInvoiceDate =  LocalDate.now();
+		LocalDate currentDate= LocalDate.now();
+		LocalDate minProfomoDate= LocalDate.now();
+		
+		
+		try {
+			
+			minProfomoDate = getMinProfomaDate(companyId);
+			/**
+			 * Logic:::
+			 * Fetch the minProfomoDate by calling getMinProfomaDate
+			 * Fetch the minInvoiceDate from the Invoice table
+			 * 1. if minProfomoDate < minInvoiceDate then
+			 *  	1.a) Check if minInvoiceDate within this month and date >= minInvoiceDate and date =<today
+			 * 				Return the minInvoiceDate
+			 * 		1.b) Check if minInvoiceDate falls previous month and todays date is <= first 5 days of the current month 
+ 							Return the minInvoiceDate
+ 					1.c) Check if minInvoiceDate falls previous month and todays date is > first 5 days of the current month
+ 						   Return the current month first day as minInvoiceDate
+ 					1.d) Check if minInvoiceDate falls before the previous month or the current month
+ 							 Return the current month first day as minInvoiceDate
+ 				2. else if  minInvoiceDate <= minProfomoDate then
+ 					2.a) return the minProfomoDate fetched from getMinProfomaDate
+ 					
+			 *  3. invoiceDate cannot be selected for future date(may be block this in the calendar widget itself)
+			 */
+			
+			Timestamp lastInvoiceDateTime = invoiceRepository.getLastInvoiceDate(companyId);
+			
+			if(lastInvoiceDateTime != null)
+			{
+				minInvoiceDate=lastInvoiceDateTime.toLocalDateTime().toLocalDate();
+			}
+			else{
+				return currentDate.withDayOfMonth(1).minusDays(1);
+			}
+			
+			if(minProfomoDate.isBefore(minInvoiceDate)){
+				int currentMonthValue =currentDate.getMonth().getValue();
+				int minInvoiceMonthValue = minInvoiceDate.getMonth().getValue();
+				
+				if( currentMonthValue ==  minInvoiceMonthValue){ // Month Value starts from 1 
+					return minInvoiceDate.minusDays(1);
+				}
+				else if (minInvoiceMonthValue == (currentMonthValue-1)  )
+				{
+					if(currentDate.getDayOfMonth()<5){ //first 5 days of the month
+						return minInvoiceDate.minusDays(1);
+					}
+					else
+					{
+						return currentDate.withDayOfMonth(1).minusDays(1);
+					}
+				}
+				else
+				{
+					return currentDate.withDayOfMonth(1).minusDays(1);
+				}
+				
+			}
+			else{
+				return minProfomoDate.minusDays(1);
+			}
+			
+			
+			
+		} catch (Exception e) {
+			log.error("Error in getMinInvoiceDate {}", e);
+		}
+		
+		return minInvoiceDate.minusDays(1);
+		
 	}
 
 	@Transactional

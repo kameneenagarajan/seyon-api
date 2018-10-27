@@ -45,7 +45,7 @@ public class Invoice implements Serializable {
 	private Date invoiceDate;
 
 	@Column
-	private Date performaDate = new Date();
+	private Date performaDate;
 
 	@Column
 	private Double cgstPerfomaPercent;

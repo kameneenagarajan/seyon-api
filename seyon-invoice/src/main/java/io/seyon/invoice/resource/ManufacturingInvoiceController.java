@@ -98,6 +98,35 @@ public class ManufacturingInvoiceController {
 				invoiceSearch.getInvoiceId(),invoiceSearch.getPerformaId());
 
 	}
+	
+	@PostMapping(path = "/getInvoiceReport", produces = MediaType.APPLICATION_JSON_VALUE)
+	public Iterable<ManufacturingInvoice> searchInvoice(
+			@RequestHeader(name = "x-company-id", required = true) Long companyId,
+			@RequestBody InvoiceSearch invoiceSearch) {
+		log.info(
+				"Invoice Search Data pageNumber {},companyId {},"
+						+ "invoiceId {},clientId {}, invoice Start Date {},Invoice end date {},invoice Status {}",
+				companyId, invoiceSearch.getId(), invoiceSearch.getClientId(),
+				invoiceSearch.getInvoiceStDate(), invoiceSearch.getInvoiceEdDate(), invoiceSearch.getStatus());
+
+
+		if (companyId == null)
+			throw new IllegalArgumentException("Company Id is null");
+		if (null != invoiceSearch.getInvoiceStDate() && null == invoiceSearch.getInvoiceEdDate())
+			throw new IllegalArgumentException("End date is null");
+		if (null != invoiceSearch.getInvoiceEdDate() && null == invoiceSearch.getInvoiceStDate())
+			throw new IllegalArgumentException("Start date is null");
+		
+		if(null!=invoiceSearch.getInvoiceEdDate() && null!=invoiceSearch.getInvoiceEdDate() && !invoiceSearch.getInvoiceStDate().equals(invoiceSearch.getInvoiceEdDate()) 
+				&& invoiceSearch.getInvoiceEdDate().before(invoiceSearch.getInvoiceStDate())) {
+			throw new IllegalArgumentException("End date is greater than start date");
+		}
+
+		return invoiceService.getInvoiceList(companyId, invoiceSearch.getId(), invoiceSearch.getClientId(),
+				invoiceSearch.getInvoiceStDate(), invoiceSearch.getInvoiceEdDate(), invoiceSearch.getStatus(),invoiceSearch.getType(),
+				invoiceSearch.getInvoiceId(),invoiceSearch.getPerformaId());
+
+	}
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
 	public ManufacturingInvoice getInvoice(@RequestParam(required = true) Long id) {
